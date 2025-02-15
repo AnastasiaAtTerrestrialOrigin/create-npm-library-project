@@ -1,7 +1,7 @@
 # Library project scaffolding script
 
 The templae is based off of this repo:
-https://github.com/AnastasiaAtTerrestrialOrigin/lib-template
+https://github.com/AnastasiaAtTerrestrialOrigin/create-npm-lib
 
 ## Run using:
 
