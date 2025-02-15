@@ -66,11 +66,15 @@ async function main() {
   // Create default git url, and homepage from git url
   let gitUrl = answers.repository;
   if (gitUrl) {
-    const homepage = gitUrl.replace('.git', '#readme');
-    const bugs = gitUrl.replace('.git', '#issues');
+    if(gitUrl.endsWith('.git')) {
+      gitUrl = gitUrl.slice(0, -4);
+    }
+
+    const homepage = gitUrl + '#readme';
+    const bugs = gitUrl + '#issues';
     answers.homepage = homepage;
     answers.bugs = bugs;
-    answers.repository = "git+" + gitUrl;
+    answers.repository = "git+" + gitUrl + ".git";
   }
 
 
