@@ -1,0 +1,22 @@
+{
+  "name": "create-lib",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "create-lib": "bin/create.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["library", "npm", "template", "lib", "library template"],
+  "author": "Anastasia Rohner",
+  "license": "MIT",
+  "description": "A script to create a library project off of the template: https://github.com/AnastasiaAtTerrestrialOrigin/lib-template",
+  "dependencies": {
+    "degit": "^2.8.4",
+    "fs-extra": "^11.3.0",
+    "inquirer": "^12.4.2",
+    "path": "^0.12.7"
+  }
+}
