@@ -4,27 +4,40 @@ import fs from 'fs-extra';
 import path from 'path';
 import inquirer from 'inquirer';
 
-const TEMPLATE_REPO = 'AnastasiaAtTerrestrialOrigin/lib-template';
-
 /**
  * Recursively replace placeholders in all text files.
  * @param {string} dir - Directory to process.
  * @param {object} replacements - Key/value pairs for replacements.
  */
 async function replacePlaceholders(dir, replacements) {
-  const entries = await fs.readdir(dir, { withFileTypes: true });
-  for (const entry of entries) {
-    const fullPath = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      await replacePlaceholders(fullPath, replacements);
-    } else {
-      let content = await fs.readFile(fullPath, 'utf8');
-      for (const [placeholder, value] of Object.entries(replacements)) {
-        const regex = new RegExp(`{{\\s*${placeholder}\\s*}}`, 'g');
-        content = content.replace(regex, value);
+  try {
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        await replacePlaceholders(fullPath, replacements);
+      } else {
+        try {
+          let content = await fs.readFile(fullPath, 'utf8');
+          let modified = false;
+          for (const [placeholder, value] of Object.entries(replacements)) {
+            const regex = new RegExp(`{{\\s*${placeholder}\\s*}}`, 'g');
+            if (content.match(regex)) {
+              content = content.replace(regex, value);
+              modified = true;
+            }
+          }
+          if (modified) {
+            await fs.writeFile(fullPath, content);
+          }
+        } catch (fileError) {
+          console.warn(`Warning: Could not process file ${fullPath}: ${fileError.message}`);
+        }
       }
-      await fs.writeFile(fullPath, content);
     }
+  } catch (error) {
+    console.error(`Error processing directory ${dir}: ${error.message}`);
+    throw error;
   }
 }
 
@@ -63,26 +76,11 @@ async function main() {
     }
   ]);
 
-  // Create default git url, and homepage from git url
-  let gitUrl = answers.repository;
-  if (gitUrl) {
-    if(gitUrl.endsWith('.git')) {
-      gitUrl = gitUrl.slice(0, -4);
-    }
-
-    const homepage = gitUrl + '#readme';
-    const bugs = gitUrl + '#issues';
-    answers.homepage = homepage;
-    answers.bugs = bugs;
-    answers.repository = "git+" + gitUrl + ".git";
-  }
-
-
   // Define the target directory for the new project.
   const targetDir = path.resolve(process.cwd(), answers.projectName);
 
   // Use degit to clone your template repository from GitHub.
-  const emitter = degit(TEMPLATE_REPO, {
+  const emitter = degit('AnastasiaAtTerrestrialOrigin/react-vite-capacitor-electron', {
     cache: false,
     force: true,
     verbose: true
@@ -92,7 +90,12 @@ async function main() {
 
   // Replace placeholders in the copied files:
   const replacements = {
-    projectName: answers.projectName
+    projectName: answers.projectName,
+    description: answers.description,
+    author: answers.author,
+    license: answers.license,
+    keywords: answers.keywords,
+    repository: answers.repository
   };
   console.log("Replacing placeholders...");
   await replacePlaceholders(targetDir, replacements);
