@@ -4,6 +4,8 @@ import fs from 'fs-extra';
 import path from 'path';
 import inquirer from 'inquirer';
 
+const GIT_TEMPLATE_REPO = 'AnastasiaAtTerrestrialOrigin/lib-template';
+
 /**
  * Recursively replace placeholders in all text files.
  * @param {string} dir - Directory to process.
@@ -80,7 +82,7 @@ async function main() {
   const targetDir = path.resolve(process.cwd(), answers.projectName);
 
   // Use degit to clone your template repository from GitHub.
-  const emitter = degit('AnastasiaAtTerrestrialOrigin/react-vite-capacitor-electron', {
+  const emitter = degit(GIT_TEMPLATE_REPO, {
     cache: false,
     force: true,
     verbose: true
