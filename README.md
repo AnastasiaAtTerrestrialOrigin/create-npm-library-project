@@ -6,5 +6,5 @@ https://github.com/AnastasiaAtTerrestrialOrigin/create-npm-library-project
 ## Run using:
 
 ```bash
-npx create-lib
+npx create-npm-library-project
 ```
