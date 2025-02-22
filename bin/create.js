@@ -77,7 +77,16 @@ async function main() {
       default: ''
     }
   ]);
+  // Create default git url, and homepage from git url
+  let gitUrl = answers.repository;
 
+  if (gitUrl) {
+    const homepage = gitUrl.replace('.git', '#readme');
+    const bugs = gitUrl.replace('.git', '#issues');
+    answers.homepage = homepage;
+    answers.bugs = bugs;
+    answers.repository = "git+" + gitUrl;
+  }
   // Define the target directory for the new project.
   const targetDir = path.resolve(process.cwd(), answers.projectName);
 
