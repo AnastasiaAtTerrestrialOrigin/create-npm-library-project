@@ -110,7 +110,9 @@ async function main() {
     author: answers.author,
     license: answers.license,
     keywords: answers.keywords,
-    repository: answers.repository
+    repository: answers.repository,
+    homepage: answers.homepage,
+    bugs: answers.bugs
   };
   console.log("Replacing placeholders...");
   await replacePlaceholders(targetDir, replacements);
